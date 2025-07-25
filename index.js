@@ -8,21 +8,22 @@ const mysql = require('mysql');
 const app = express();
 
 // Middleware
+app.use(express.json());
 app.use(helmet());  //Helmet sets various HTTP security headers that protect your app from known web vulnerabilities. Helmet = HTTP firewall for headers
 app.use(cors({ origin: process.env.CLIENT_URL 
     ||
      "*" ,   //never do this 
      credentials:true}));
 app.use(morgan("dev"));  //Logs incoming HTTP requests to the terminal.
-app.use(express.json());
+// app.use(express.json());
 
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
+    host: process.env.host,
+    user: process.env.user,
     port:3306,
-    password: '',
-    database: 'nodejs'
+    password: process.env.password,
+    database: process.env.database
 });
 
 db.connect((err) => {

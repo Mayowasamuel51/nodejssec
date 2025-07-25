@@ -6,12 +6,32 @@ const mysql = require('mysql');
 const users = [];
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    port: 3306,
-    password: '',
-    database: 'nodejs'
+    host: process.env.host,
+    user: process.env.user,
+    port:3306,
+    password: process.env.password,
+    database: process.env.database
 });
+
+
+
+exports.getProfile = async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT id, name, email FROM products WHERE id = ?", [req.user.id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({
+      message: "Welcome back",
+      user: rows[0],
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
