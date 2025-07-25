@@ -111,3 +111,25 @@ exports.login = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+
+exports.addProduct = (req, res) => {
+  const { name, description, price } = req.body;
+  const userId = req.user.id; // from authMiddleware
+
+  if (!name || !price) {
+    return res.status(400).json({ error: "Name and price are required" });
+  }
+
+  const sql = "INSERT INTO main (name, description, price, user_id) VALUES (?, ?, ?, ?)";
+  const values = [name, description, price, userId];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("DB Error:", err);
+      return res.status(500).json({ error: "Something went wrong" });
+    }
+
+    res.status(201).json({ message: "Product added successfully", productId: result.insertId });
+  });
+};
