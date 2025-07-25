@@ -1,0 +1,3 @@
+npm install express dotenv helmet cors morgan bcryptjs jsonwebtoken joi express-rate-limit
+npm install --save-dev nodemon
+
